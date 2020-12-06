@@ -1,9 +1,9 @@
 # Hierarchical Adaptive Lasso: Learning Sparse Neural Networks via Single Stage Training
-This repository accompanies the paper, Hierarchical Adaptive Lasso: Learning Sparse Neural Networks via Single Stage Training.
+This repository accompanies the paper, Hierarchical Adaptive Lasso: Learning Sparse Neural Networks via Single Stage Training (https://arxiv.org/abs/2008.10183).
 
 
 ## About the Repository
-In our paper we introduce HALO, a penalty with learnable parameters for sparsifying models (particularly deep neural networks). This repository contains the code necessary to replicate the experiments in Sections 4 and in the supplementary material and use HALO.
+In our paper we introduce HALO, a penalty with learnable parameters for sparsifying models (particularly deep neural networks). This repository contains the code necessary to replicate the experiments in Sections 5 and in the supplementary material and use HALO.
 
 
 ## Setup and Requirements
@@ -74,13 +74,23 @@ Please see the library for rethinking the value of network pruning for guidance 
 
 
 ### Citations
-This codebase uses code from the following papers as indicated in the files and readme. Please cite them accordingly.
+This codebase uses code from the following papers as indicated in the files and readme. Please cite accordingly.
 
 @inproceedings{liu2018rethinking,
   title={Rethinking the Value of Network Pruning},
   author={Liu, Zhuang and Sun, Mingjie and Zhou, Tinghui and Huang, Gao and Darrell, Trevor},
   booktitle={ICLR},
   year={2019}
+}
+
+
+If you use the repo, please cite our paper
+
+@article{seto2020hierarchical,
+  title={Hierarchical Adaptive Lasso: Learning Sparse Neural Networks with Shrinkage via Single Stage Training},
+  author={Seto, Skyler and Wells, Martin T and Zhang, Wenyu},
+  journal={arXiv preprint arXiv:2008.10183},
+  year={2020}
 }
 
 
