@@ -22,7 +22,7 @@ from tensorboardX import SummaryWriter
 from torchsummary import summary
 
 import models.cifar as models
-from cifar_dataset import CIFAR10WithIdx, CIFAR100WithIdx
+
 
 import sys
 from utils import AverageMeter, accuracy, mkdir_p, savefig
@@ -35,7 +35,6 @@ parser.add_argument('-v', '--validation', default=False, const=True, action='sto
 parser.add_argument('-d', '--dataset', default='cifar10', type=str)
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
-parser.add_argument('--rand_frac', default=0.0, type=float, help='rand perm label for gen experiments')
 
 
 # Optimization options
@@ -142,11 +141,11 @@ def make_dataset():
         testloader (pytorch dataloader): pytorch loader for test set
         num_classes (int); number of classes for supervised image classification
     '''
+
     print('==> Preparing dataset %s' % args.dataset)
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
-        # transforms.RandomRotation(15),
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
@@ -156,43 +155,19 @@ def make_dataset():
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
     if args.dataset == 'cifar10':
-        if args.rand_frac == 0.0:
-            train_dataloader = datasets.CIFAR10
-        else:
-            train_dataloader = CIFAR10WithIdx
-
-        
-        test_dataloader = datasets.CIFAR10
+        dataloader = datasets.CIFAR10
         num_classes = 10
     else:
-        if args.rand_frac == 0.0:
-            train_dataloader = datasets.CIFAR100
-        else:
-            train_dataloader = CIFAR100WithIdx
-
-        test_dataloader = datasets.CIFAR100
+        dataloader = datasets.CIFAR100
         num_classes = 100
 
-    if args.rand_frac == 0.0:
-        trainset = train_dataloader(root='./data', train=True, download=True,
-            transform=transform_train)
-    else:
-        trainset = train_dataloader(root='/tmp/data', train=True, download=True,
-            transform=transform_train, rand_fraction=args.rand_frac)
+    trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
+    trainloader = data.DataLoader(trainset, batch_size=64, shuffle=True, num_workers=8)
 
-    trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
-
-    if not args.validation:
-        testset = test_dataloader(root='./data', train=False, download=False, transform=transform_test)
-        testloader = data.DataLoader(testset, batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
-
-    else:
-        trainset, valset = torch.utils.data.random_split(trainset, [40000, 10000])
-        trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
-        testloader = data.DataLoader(valset, batch_size=args.train_batch, shuffle=False, num_workers=args.workers)
+    testset = dataloader(root='./data', train=False, download=False, transform=transform_test)
+    testloader = data.DataLoader(testset, batch_size=64, shuffle=False, num_workers=8)
 
     return trainloader, testloader, num_classes
-
 
 # Model
 def init_model():
@@ -254,10 +229,8 @@ def train():
     top5 = AverageMeter()
 
     for batch_idx, batch in enumerate(trainloader):
-        if args.rand_frac == 0.0:
-            inputs, targets = batch
-        else:
-            inputs, targets, idx = batch
+        inputs, targets = batch
+        
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda(async=True)
 
@@ -636,7 +609,7 @@ if __name__ == '__main__':
             np.save(os.path.join(args.save_dir, 'num_zeros'), num_zero_weights)
 
         # save reg params
-        if args.halo and args.rand_frac == 0.0:
+        if args.halo:
             np.save(os.path.join(args.save_dir, 'reg_params'), reg_params.detach().cpu().numpy())
 
             conv_params = []

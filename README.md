@@ -27,7 +27,7 @@ python check_params.py \
 
 
 ### Checking sparsity for pruned models
-Code is also provided for obtaining the eigenvalues of the ouput covariance matrices to obtain Figure 1c. The provided command will save the eigenvalues for each convolutional layer.
+Code is also provided for obtaining the eigenvalues of the ouput covariance matrices to obtain Figure 5c. The provided command will save the eigenvalues for each convolutional layer.
 
 ```
 python compute_energy.py \
@@ -43,7 +43,7 @@ For the other types of learned sparsity, the ```check_params.py``` code outputs 
 
 ### Training models with HALO on CIFAR10/0
 
-This command will train a VGG-like architecture on the CIFAR-10 dataset with the HALO penalty. Running this command should give you an accuracy close to 93.61. You can change the architecture to resnet and depth to 50 to replicate our experiments with a different architecture, and the dataset to cifar100. Information about proper hyperparameters can be found in the appendix of our paper. A similar command can be used for MNIST experiments using the mnist.py file in the mnist directory.
+This command will train a VGG-like architecture on the CIFAR-10 dataset with the HALO penalty. Running this command should give you an accuracy close to 93.61. You can change the architecture to resnet and depth to 50 to replicate our experiments with a different architecture, and the dataset to cifar100. Information about proper hyperparameters can be found in the appendix of our paper. A similar command can be used for MNIST experiments using the mnist.py file.
 ```
 python cifar.py \
   -d cifar10  \
@@ -59,7 +59,7 @@ python cifar.py \
 Note, the learning rate and initial value of regularization coefficients can be specified using --lr, and --lambda_init respectively.  By default the same weight decay and learning rate are used for the regularization coefficients. You can also edit other training parameters such as the number of epochs, decay epoch specifications, etc. by looking at other arguments, and switch the regularizer with either --l1 or --ws (SWS).
 
 ### Pruning models
-This command will prune a VGG-like architecture trained on CIFAR-10 at a specific prune percentage and perform test evaluation to get the accuracy before and after pruning and compare with Tables 2. You will need to specify the save and load locations, and the output file will be a pruned model with the named pruned_$percent$.path.tar. A similar command can be used for MNIST experiments using the mnist.py file in the mnist directory.
+This command will prune a VGG-like architecture trained on CIFAR-10 at a specific prune percentage and perform test evaluation to get the accuracy before and after pruning and compare with Table 2. You will need to specify the save and load locations, and the output file will be a pruned model with the named pruned_$percent$.path.tar. A similar command can be used for MNIST experiments using the mnist.py file.
 ```
 python cifar_prune_iterative.py \
   -d cifar10  \
@@ -70,7 +70,7 @@ python cifar_prune_iterative.py \
   --save_dir $SAVE_DIRECTORY$
 ```
 
-Please see the library for rethinking the value of network pruning for guidance on how to run this file, and license information: https://github.com/Eric-mingjie/rethinking-network-pruning
+Please see the library for rethinking the value of network pruning for guidance on how to run this file (and associated), and license information: https://github.com/Eric-mingjie/rethinking-network-pruning
 
 
 ### Citations
@@ -95,4 +95,4 @@ If you use the repo, please cite our paper
 
 
 ### Distribution
-Please do not distribute this code or release it elsewhere without permission.
+Please do not distribute this code or release it elsewhere without permission. Code is provided as is.
